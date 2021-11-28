@@ -13,3 +13,4 @@ Simple simulator of premier league.
 7. Install node modules `npm install`
 8. Serve frontend `npm run watch` or `npm run dev` to compile assets
 
+![img.png](img.png)
