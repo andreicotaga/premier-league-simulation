@@ -9,5 +9,7 @@ Simple simulator of premier league.
 3. Adapt DB_DATABASE variable on .env file (with name of the one you have created)
 4. `php artisan migrate`
 5. `php artisan db:seed`
-6. `php artisan server` (you can specify any port you want by `--port=8083`)
+6. Serve the application to run backend `php artisan serve`
+7. Install node modules `npm install`
+8. Serve frontend `npm run watch` or `npm run dev` to compile assets
 
