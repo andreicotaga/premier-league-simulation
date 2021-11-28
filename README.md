@@ -1,8 +1,9 @@
 ## Premier League Simulation
 
-`Clone the repository` or access it via https://www.example.com
+Simple simulator of premier league.
 
-###Installation steps:
+### Installation steps:
+0. Clone the repository and do `composer install`
 1. Create a .env file based on .env.example file
 2. Make sure you have a database in place (with random name)
 3. Adapt DB_DATABASE variable on .env file (with name of the one you have created)
