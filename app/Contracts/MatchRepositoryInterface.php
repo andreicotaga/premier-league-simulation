@@ -2,6 +2,10 @@
 
 namespace App\Contracts;
 
+/**
+ * Interface MatchRepositoryInterface
+ * @package App\Contracts
+ */
 interface MatchRepositoryInterface
 {
     /**

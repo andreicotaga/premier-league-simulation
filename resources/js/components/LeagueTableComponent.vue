@@ -28,16 +28,8 @@
             </tbody>
         </table>
         <hr/>
-        <div class="bg-white divide-y divide-gray-200 flex justify-between px-6 py-4">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-3 rounded">
-                Previous week
-            </button>
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-3 rounded">
-                Next week
-            </button>
-        </div>
         <div class="bg-white divide-y divide-gray-200 flex justify-between px-6 py-4 mt-2">
-            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            <button @click="playAll" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Play ALL
             </button>
             <button
@@ -46,7 +38,7 @@
             >
                 Reset
             </button>
-            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <button @click="play" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Play current week
             </button>
         </div>
@@ -60,10 +52,14 @@ import axios from "axios";
 export default {
     name: "LeagueTableComponent",
     data() {
-        return {}
+        return {
+            weekId: 0
+        }
     },
     async beforeMount() {
         await this.fetchData();
+
+        this.$bus.$on('week-id', this.setWeekId)
     },
     computed: {
         ...mapGetters({
@@ -72,7 +68,9 @@ export default {
     },
     methods: {
         ...mapActions({
-            fetchDataStandings: 'fetchDataStandings'
+            fetchDataStandings: 'fetchDataStandings',
+            fetchDataFixtures: 'fetchDataFixtures',
+            fetchDataPrediction: 'fetchDataPrediction',
         }),
 
         async fetchData() {
@@ -87,10 +85,43 @@ export default {
 
                 if (response.status === 200) {
                     await this.fetchDataStandings();
+                    await this.fetchDataFixtures();
+                    await this.fetchDataPrediction();
                 }
             } catch (e) {
                 console.warn(e);
             }
+        },
+
+        async play() {
+            try {
+                const response = await axios.put('/play/' + this.weekId)
+
+                if (response.status === 200) {
+                    await this.fetchDataStandings();
+                    await this.fetchDataFixtures();
+                    await this.fetchDataPrediction();
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        },
+
+        async playAll() {
+            try {
+                const response = await axios.put('/play')
+
+                if (response.status === 200) {
+                    await this.fetchDataStandings();
+                    await this.fetchDataFixtures();
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        },
+
+        setWeekId({weekId}) {
+            this.weekId = weekId;
         }
     }
 }

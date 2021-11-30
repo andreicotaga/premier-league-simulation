@@ -16,9 +16,6 @@
                         <league-table-component></league-table-component>
                         <match-result-component></match-result-component>
                     </div>
-                    <div class="grid grid-cols-12">
-                        <prediction-component></prediction-component>
-                    </div>
                 </div>
             </div>
         </div>

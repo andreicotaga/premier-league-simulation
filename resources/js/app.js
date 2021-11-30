@@ -8,6 +8,8 @@ window.Vue = require('vue').default;
 import VueTailwind from 'vue-tailwind'
 import axios from "axios";
 import store from "./store";
+import EventBus from "./EventBus/EventBus";
+
 import "tailwindcss/tailwind.css"
 
 import {
@@ -56,13 +58,6 @@ const components = {
     TDialog,
 }
 
-const axiosConfig = {
-    baseURL: 'http://premier-league-simulation.test/api',
-    timeout: 30000,
-};
-
-Vue.prototype.$axios = axios.create(axiosConfig)
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -85,6 +80,8 @@ Vue.component('match-result-component', require('./components/MatchResultCompone
  */
 
 Vue.use(VueTailwind, components)
+
+Vue.prototype.$bus = EventBus;
 
 const app = new Vue({
     el: '#app',

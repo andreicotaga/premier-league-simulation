@@ -13,4 +13,12 @@ Simple simulator of premier league.
 7. Install node modules `npm install`
 8. Serve frontend `npm run watch` or `npm run dev` to compile assets
 
-![img.png](img.png)
+### Rules
+1. There are four team playing on this Premier League Simulator 
+2. Standings are present with 0 default state
+3. The whole season (weeks) can be played all each week
+4. Reset functionality for getting to the initial state
+5. Prediction is done based on team ranking
+
+#### Example screenshots:
+![img_1.png](img_1.png)

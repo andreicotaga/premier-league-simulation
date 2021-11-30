@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\StandingRepositoryInterface;
 use App\Models\Standing;
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Collection;
 
 class StandingRepository implements StandingRepositoryInterface
 {
@@ -48,6 +49,18 @@ class StandingRepository implements StandingRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return $this->team->leftJoin('standings', 'teams.id', '=', 'standings.team_id')
+            ->orderBy('standings.points', 'DESC')
+            ->orderBy('standings.goal_drawn', 'DESC')
+            ->orderBy('standings.won', 'DESC')
+            ->get();
+    }
+
+    /**
      * Truncate table for reset action
      */
     public function truncate(): void
@@ -56,6 +69,8 @@ class StandingRepository implements StandingRepositoryInterface
     }
 
     /**
+     * Get standing by team id
+     *
      * @param $team_id
      * @return mixed
      */
@@ -65,6 +80,8 @@ class StandingRepository implements StandingRepositoryInterface
     }
 
     /**
+     * Check standing status
+     *
      * @return mixed
      */
     public function checkStandingStatus()

@@ -2,6 +2,10 @@
 
 namespace App\Contracts;
 
+/**
+ * Interface StandingRepositoryInterface
+ * @package App\Contracts
+ */
 interface StandingRepositoryInterface
 {
     /**

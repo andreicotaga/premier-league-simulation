@@ -51,6 +51,19 @@ class IndexController
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function fixtures(): JsonResponse
+    {
+        return response()->json([
+            'data' => [
+                'fixtures' => $this->initializationService->getFixtures()
+            ],
+            'status' => true
+        ]);
+    }
+
+    /**
      * Reset all data
      * @throws Exception
      */

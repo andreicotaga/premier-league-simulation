@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\PredictionController;
+use App\Http\Controllers\SimulationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +21,7 @@ Route::get('/reset', [IndexController::class, 'reset']);
 Route::get('/standings', [IndexController::class, 'standings']);
 Route::get('/fixtures', [IndexController::class, 'fixtures']);
 
-Route::get('/prediction', 'PredictionController@get');
+Route::get('/prediction', [PredictionController::class, 'get']);
 
-Route::get('/play', 'SimulationController@playAll');
-Route::get('/play/{weekId}', 'SimulationController@play');
+Route::put('/play', [SimulationController::class, 'playAll']);
+Route::put('/play/{weekId}', [SimulationController::class, 'play']);

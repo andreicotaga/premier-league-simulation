@@ -6,6 +6,7 @@ use App\Contracts\MatchRepositoryInterface;
 use App\Models\Match;
 use App\Models\Team;
 use App\Models\Week;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class MatchRepository
@@ -66,14 +67,6 @@ class MatchRepository implements MatchRepositoryInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getWeeks()
-    {
-        return $this->week->get();
-    }
-
-    /**
      * @param $fixtures
      */
     public function create($fixtures): void
@@ -94,46 +87,42 @@ class MatchRepository implements MatchRepositoryInterface
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getFixture()
+    public function getFixture(): array
     {
         return $this->resource->select(
             'matches.id',
-            'matches.status',
+            'matches.played',
             'matches.week_id',
             'matches.home_team_goal',
             'matches.away_team_goal',
-            'week_id',
+            'weeks.name as week_name',
             'home.name as home_team',
-            'home.logo as home_logo',
-            'home.shirt as home_shirt',
-            'away.logo as away_logo',
-            'away.shirt as away_shirt',
             'away.name as away_team')
             ->join('weeks', 'weeks.id', '=', 'matches.week_id')
             ->join('teams as home', 'home.id', '=', 'matches.home_team')
             ->join('teams as away', 'away.id', '=', 'matches.away_team')
             ->orderBy('week_id', 'ASC')
-            ->get();
+            ->get()
+            ->groupBy('week_id')
+            ->toArray();
     }
 
     /**
      * @param $week_id
      * @return mixed
      */
-    public function getFixtureByWeekId($week_id)
+    public function getFixtureByWeekId($week_id): Collection
     {
         return $this->resource->select(
             'matches.id',
-            'matches.status',
+            'matches.played',
             'matches.week_id',
             'matches.home_team_goal',
             'matches.away_team_goal',
             'week_id',
-            'weeks.title',
-            'home.logo as home_logo',
-            'away.logo as away_logo',
+            'weeks.name as week_name',
             'home.name as home_team',
             'away.name as away_team')
             ->join('weeks', 'weeks.id', '=', 'matches.week_id')
@@ -145,21 +134,23 @@ class MatchRepository implements MatchRepositoryInterface
     }
 
     /**
-     * @param $week
+     * @param int $weekId
      * @return mixed
      */
-    public function getMatchesFromWeek($week)
+    public function getMatchesByWeek(int $weekId)
     {
-        return $this->resource->where([['week_id', '=', $week], ['status', '=', 0]])->get();
+        return $this->resource->where([['week_id', '=', $weekId], ['played', '=', 0]])->get();
     }
 
     /**
-     * @param int $status
+     * Get all not played matches
+     *
+     * @param int $played
      * @return mixed
      */
-    public function getAllMatches($status = 0)
+    public function getAllMatches(int $played = 0): Collection
     {
-        return $this->resource->where('status', '=', $status)->get();
+        return $this->resource->where('played', '=', $played)->get();
     }
 
     /**
@@ -173,17 +164,19 @@ class MatchRepository implements MatchRepositoryInterface
                 $q->where('home_team', '=', $teamId)
                     ->orWhere('away_team', '=', $teamId);
             })
-            ->where('status', '=', 0)
+            ->where('played', '=', 0)
             ->get();
     }
 
     /**
+     * Update match score
+     *
      * @param $homeScore
      * @param $awayScore
      * @param $home
      * @param $away
      */
-    public function updateMatchScore($homeScore, $awayScore, $home, $away)
+    public function update($homeScore, $awayScore, $home, $away)
     {
         $goalDrawn = abs($awayScore - $homeScore);
 
@@ -204,16 +197,18 @@ class MatchRepository implements MatchRepositoryInterface
     }
 
     /**
+     * Save match score
+     *
      * @param $match
      * @param $homeScore
      * @param $awayScore
      * @return mixed
      */
-    public function resultSaver($match, $homeScore, $awayScore)
+    public function save($match, $homeScore, $awayScore)
     {
         $match->home_team_goal = $homeScore;
         $match->away_team_goal = $awayScore;
-        $match->status         = 1;
+        $match->played = 1;
 
         return $match->save();
     }

@@ -47,4 +47,32 @@ class Standing extends Model
     {
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
+
+    /**
+     * @param int $goalDrawn
+     */
+    public function won(int $goalDrawn)
+    {
+        $this->played     += 1;
+        $this->won        += 1;
+        $this->points     += 3;
+        $this->goal_drawn += $goalDrawn;
+    }
+
+    /**
+     * @param int $goalDrawn
+     */
+    public function lose(int $goalDrawn)
+    {
+        $this->played     += 1;
+        $this->goal_drawn += -$goalDrawn;
+        $this->lose       += 1;
+    }
+
+    public function draw(): void
+    {
+        $this->played += 1;
+        $this->draw   += 1;
+        $this->points += 1;
+    }
 }

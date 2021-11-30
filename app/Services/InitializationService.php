@@ -7,9 +7,7 @@ use App\Contracts\InitializationServiceInterface;
 use App\Contracts\MatchRepositoryInterface;
 use App\Contracts\StandingRepositoryInterface;
 use App\Contracts\TeamRepositoryInterface;
-use App\Services\FixtureDraw\HomeAndAwayDraw;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
+use App\Contracts\WeekRepositoryInterface;
 
 /**
  * Class InitializationService
@@ -33,16 +31,28 @@ class InitializationService implements InitializationServiceInterface
     protected $teamRepository;
 
     /**
+     * @var WeekRepositoryInterface
+     */
+    protected $weekRepository;
+
+    /**
      * InitializationService constructor.
      * @param MatchRepositoryInterface $matchRepository
      * @param StandingRepositoryInterface $standingRepository
      * @param TeamRepositoryInterface $teamRepository
+     * @param WeekRepositoryInterface $weekRepository
      */
-    public function __construct(MatchRepositoryInterface $matchRepository, StandingRepositoryInterface $standingRepository, TeamRepositoryInterface $teamRepository)
+    public function __construct(
+        MatchRepositoryInterface $matchRepository,
+        StandingRepositoryInterface $standingRepository,
+        TeamRepositoryInterface $teamRepository,
+        WeekRepositoryInterface $weekRepository
+    )
     {
         $this->matchRepository = $matchRepository;
         $this->standingRepository = $standingRepository;
         $this->teamRepository = $teamRepository;
+        $this->weekRepository = $weekRepository;
     }
 
     /**
@@ -59,6 +69,8 @@ class InitializationService implements InitializationServiceInterface
     }
 
     /**
+     * Get all teams with their standings
+     *
      * @return array
      */
     public function getAllTeamsWithStandings(): array
@@ -79,6 +91,26 @@ class InitializationService implements InitializationServiceInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Get all weeks
+     *
+     * @return array
+     */
+    public function getWeeks(): array
+    {
+        return $this->weekRepository->get()->pluck(['id', 'name'])->toArray();
+    }
+
+    /**
+     * Get initial fixtures
+     *
+     * @return array
+     */
+    public function getFixtures(): array
+    {
+        return $this->matchRepository->getFixture();
     }
 
     /**
