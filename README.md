@@ -2,6 +2,9 @@
 
 Simple simulator of premier league.
 
+### DEMO
+https://premier-league-simulation.herokuapp.com/
+
 ### Installation steps:
 0. Clone the repository and do `composer install`
 1. Create a .env file based on .env.example file
